@@ -7,6 +7,7 @@ import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -88,7 +89,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         val home = LatLng(-26.206184, 28.062155)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(home, 18f))
-        map.addMarker(MarkerOptions().position(home))
+//        map.addMarker(MarkerOptions().position(home))
 
 //        val overlaySize = 100f
 //        val androidOverlay = GroundOverlayOptions()
@@ -97,7 +98,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 //        map.addGroundOverlay(androidOverlay)
 
 //        setMapLongClick(map)
-//        setPoiClick(map)
+        setPoiClick(map)
 //        setMapStyle(map)
 
         enableMyLocation()
@@ -132,6 +133,16 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )
+        }
+    }
+
+    private fun setPoiClick(map: GoogleMap) {
+        map.setOnPoiClickListener { poi ->
+            _viewModel.selectedPOI.value = poi
+            _viewModel.reminderSelectedLocationStr.value = poi.name
+            _viewModel.latitude.value = poi.latLng.latitude
+            _viewModel.longitude.value = poi.latLng.longitude
+            findNavController().popBackStack()
         }
     }
 }

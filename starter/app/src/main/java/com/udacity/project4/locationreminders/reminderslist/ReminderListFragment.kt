@@ -13,11 +13,9 @@ import com.udacity.project4.authentication.LoginViewModel
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentRemindersBinding
-import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import com.udacity.project4.utils.setTitle
 import com.udacity.project4.utils.setup
-import kotlinx.android.synthetic.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ReminderListFragment : BaseFragment() {
