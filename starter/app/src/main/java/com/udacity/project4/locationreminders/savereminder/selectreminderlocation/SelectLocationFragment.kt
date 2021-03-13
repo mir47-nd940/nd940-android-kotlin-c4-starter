@@ -87,8 +87,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        val home = LatLng(-26.206184, 28.062155)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(home, 18f))
+        val home = LatLng(-26.115942814888705, 28.141600005678534)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(home, 15f))
 //        map.addMarker(MarkerOptions().position(home))
 
 //        val overlaySize = 100f
