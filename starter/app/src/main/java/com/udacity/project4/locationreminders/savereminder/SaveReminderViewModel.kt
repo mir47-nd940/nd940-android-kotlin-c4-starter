@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.savereminder
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.PointOfInterest
@@ -16,6 +17,7 @@ class SaveReminderViewModel(private val dataSource: ReminderDataSource) : BaseVi
     val reminderDescription = MutableLiveData<String>()
     val reminderSelectedLocationStr = MutableLiveData<String>()
     val selectedPOI = MutableLiveData<PointOfInterest>()
+    val selectedPOIObservable: LiveData<PointOfInterest> = selectedPOI
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
 
