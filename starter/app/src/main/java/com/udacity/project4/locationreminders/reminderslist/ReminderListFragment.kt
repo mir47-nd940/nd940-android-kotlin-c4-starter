@@ -97,10 +97,9 @@ class ReminderListFragment : BaseFragment() {
     }
 
     private fun setupRecyclerView() {
-        val adapter = RemindersListAdapter {
-        }
+        val adapter = RemindersListAdapter{}
 
-//        setup the recycler view using the extension function
+        // setup the recycler view using the extension function
         binding.reminderssRecyclerView.setup(adapter)
     }
 

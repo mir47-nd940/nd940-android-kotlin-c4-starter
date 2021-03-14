@@ -37,18 +37,8 @@ class RemindersActivityTest :
         stopKoin()//stop the original app koin
         appContext = getApplicationContext()
         val myModule = module {
-            viewModel {
-                RemindersListViewModel(
-                    appContext,
-                    get() as ReminderDataSource
-                )
-            }
-            single {
-                SaveReminderViewModel(
-                    appContext,
-                    get() as ReminderDataSource
-                )
-            }
+            viewModel { RemindersListViewModel(get() as ReminderDataSource) }
+            single { SaveReminderViewModel(get() as ReminderDataSource) }
             single { RemindersLocalRepository(get()) as ReminderDataSource }
             single { LocalDB.createRemindersDao(appContext) }
         }
