@@ -193,18 +193,25 @@ class ReminderListFragment : BaseFragment() {
             geoList.add(geofence)
         }
 
-        val geofencingRequest = GeofencingRequest.Builder()
-            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            .addGeofences(geoList)
+        if (geoList.isNotEmpty()) {
+            val geofencingRequest = GeofencingRequest.Builder()
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .addGeofences(geoList)
 
-        geofencingClient.addGeofences(geofencingRequest.build(), geofencePendingIntent)?.run {
-            addOnSuccessListener {
-                Toast.makeText(requireActivity(), R.string.geofences_added, Toast.LENGTH_SHORT).show()
-                Log.d(TAG, "Geofences added")
-            }
-            addOnFailureListener {
-                Toast.makeText(requireActivity(), R.string.geofences_not_added, Toast.LENGTH_SHORT).show()
-                it.message?.let { msg -> Log.e(TAG, msg)}
+            geofencingClient.addGeofences(geofencingRequest.build(), geofencePendingIntent)?.run {
+                addOnSuccessListener {
+                    Toast.makeText(requireActivity(), R.string.geofences_added, Toast.LENGTH_SHORT)
+                        .show()
+                    Log.d(TAG, "Geofences added")
+                }
+                addOnFailureListener {
+                    Toast.makeText(
+                        requireActivity(),
+                        R.string.geofences_not_added,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    it.message?.let { msg -> Log.e(TAG, msg) }
+                }
             }
         }
     }
