@@ -6,8 +6,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
@@ -16,7 +14,6 @@ import com.udacity.project4.locationreminders.data.FakeAndroidDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -60,8 +57,6 @@ class ReminderListFragmentTest : KoinTest {
         val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
         val navController = Mockito.mock(NavController::class.java)
         scenario.onFragment { Navigation.setViewNavController(it.view!!, navController) }
-
-        onView(withId(R.id.noDataTextView)).check(matches(not(isDisplayed())))
 
         // WHEN - Click on the add reminder FAB
         onView(withId(R.id.addReminderFAB)).perform(click())
