@@ -30,9 +30,8 @@
     <string name="select_location">Please select location</string>
     <string name="geofences_not_added">Problem in adding geofences.</string>
     <string name="welcome">Welcome</string>
-    <string name="err_enter_title">Please enter title</string>
-    <string name="err_select_location">Please select location</string>
-    <string name="err_map_style">Can\'t find map style</string>
+    <string name="email_buttom">Email sign in</string>
+    <string name="google_button">Google sign in</string>
 
     <!-- Error strings -->
     <string name="geofence_unknown_error">Unknown error: the Geofence service is not available now.</string>
@@ -42,6 +41,9 @@
     <string name="error_adding_geofence">Error Happened, Can\'t Add Geofence</string>
     <string name="unknown_geofence_error">Unknown error: the Geofence service is not available now</string>
     <string name="geofence_transition_invalid_type">Invalid transition: %1$d</string>
+    <string name="err_map_style">Can\'t find map style</string>
+    <string name="err_select_location">Please select location</string>
+    <string name="err_enter_title">Please enter title</string>
 
     <!--    Geofence Status Strings-->
     <string name="geofences_added">Geofences added.</string>
