@@ -1,31 +1,67 @@
 package com.udacity.project4.locationreminders.reminderslist
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.udacity.project4.R
+import com.udacity.project4.locationreminders.data.FakeAndroidDataSource
+import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.mock
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
+import org.koin.core.module.Module
+import org.koin.dsl.module
+import org.koin.test.KoinTest
+import org.mockito.Mockito
 import org.mockito.Mockito.verify
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 @ExperimentalCoroutinesApi
-//UI Testing
 @MediumTest
-class ReminderListFragmentTest {
+class ReminderListFragmentTest : KoinTest {
 
-//    TODO: test the navigation of the fragments.
-//    TODO: test the displayed data on the UI.
-//    TODO: add testing for the error messages.
+    private lateinit var fakeDataSource: FakeAndroidDataSource
+
+    lateinit var mockModule: Module
+
+    @Before
+    fun setup() {
+        fakeDataSource = FakeAndroidDataSource()
+        mockModule = module {
+            single(override = true) { fakeDataSource }
+        }
+        loadKoinModules(mockModule)
+    }
+
+    @After
+    fun tearDown() {
+        unloadKoinModules(mockModule)
+    }
+
+    @Test
+    fun clickAdd_navigateToSaveReminderFragment() = runBlockingTest {
+        fakeDataSource.saveReminder(ReminderDTO("title1", "desc1", "location1", 1.0, 2.0))
+
+        // GIVEN - On the reminders screen
+        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
+        val navController = Mockito.mock(NavController::class.java)
+        scenario.onFragment { Navigation.setViewNavController(it.view!!, navController) }
+
+        // WHEN - Click on the add reminder FAB
+        onView(withId(R.id.addReminderFAB)).perform(click())
+
+        // THEN - Verify navigation to the save reminder screen
+        verify(navController).navigate(ReminderListFragmentDirections.toSaveReminder())
+    }
 }
