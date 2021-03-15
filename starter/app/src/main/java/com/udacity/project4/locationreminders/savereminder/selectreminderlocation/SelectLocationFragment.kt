@@ -58,7 +58,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         (childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment).getMapAsync(this)
 
         _viewModel.selectedPOIObservable.observe(this) {
-            onLocationSelected(it)
+            it?.let { onLocationSelected(it) }
         }
 
         return binding.root
