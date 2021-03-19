@@ -12,8 +12,8 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -24,10 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
+import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
@@ -48,6 +45,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private var snackbar: Snackbar? = null
+    private var marker: Marker? = null
 
     private val MIN_TIME: Long = 400
     private val MIN_DISTANCE = 1000f
@@ -61,15 +59,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         binding.viewModel = _viewModel
         binding.lifecycleOwner = this
 
+        binding.savePoi.setOnClickListener { onPoiConfirmed() }
+
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
         (childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment).getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-        _viewModel.selectedPOIObservable.observe(this) {
-            it?.let { onLocationSelected(it) }
-        }
 
         return binding.root
     }
@@ -79,11 +75,15 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         snackbar?.dismiss()
     }
 
-    private fun onLocationSelected(poi: PointOfInterest) {
-        _viewModel.reminderSelectedLocationStr.value = poi.name
-        _viewModel.latitude.value = poi.latLng.latitude
-        _viewModel.longitude.value = poi.latLng.longitude
-        findNavController().popBackStack()
+    private fun onPoiConfirmed() {
+        _viewModel.selectedPOI.value?.let {
+            _viewModel.reminderSelectedLocationStr.value = it.name
+            _viewModel.latitude.value = it.latLng.latitude
+            _viewModel.longitude.value = it.latLng.longitude
+            findNavController().popBackStack()
+        } ?: run {
+            Toast.makeText(activity, getString(R.string.select_poi), Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -205,10 +205,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private fun setPoiClick(map: GoogleMap) {
         map.setOnPoiClickListener { poi ->
-            map.addMarker(
-                MarkerOptions().position(
-                    LatLng(poi.latLng.latitude, poi.latLng.longitude)
-                )
+            map.clear()
+            marker = map.addMarker(
+                MarkerOptions().position(LatLng(poi.latLng.latitude, poi.latLng.longitude))
             )
             _viewModel.selectedPOI.value = poi
         }
