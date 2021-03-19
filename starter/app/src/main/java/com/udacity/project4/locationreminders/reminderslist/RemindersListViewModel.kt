@@ -41,7 +41,7 @@ class RemindersListViewModel(private val dataSource: ReminderDataSource) : BaseV
                     _remindersList.value = dataList
                 }
                 is Result.Error ->
-                    showSnackBar.value = result.message
+                    showErrorMessage.value = result.message
             }
 
             //check if no data has to be shown

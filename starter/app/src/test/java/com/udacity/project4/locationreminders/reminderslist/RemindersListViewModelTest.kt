@@ -41,11 +41,41 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun saveValidReminder_setsNavigationEvent() {
+    fun loadReminders_success() {
         // When reminders are loaded
         remindersListViewModel.loadReminders()
 
         // Then the list has 3 items
         assertThat(remindersListViewModel.remindersList.getOrAwaitValue().size, `is`(3))
+    }
+
+    @Test
+    fun loadReminders_error() {
+        // Make the data source return error.
+        reminderDataSource.setReturnError(true)
+
+        // When reminders are loaded
+        remindersListViewModel.loadReminders()
+
+        // Then an error message is triggered.
+        assertThat(remindersListViewModel.showErrorMessage.getOrAwaitValue(), `is`("Test error"))
+    }
+
+    @Test
+    fun loadReminders_loading() {
+        // Pause coroutines actions
+        mainCoroutineRule.pauseDispatcher()
+
+        // When reminders are loaded
+        remindersListViewModel.loadReminders()
+
+        // Then progress indicator is shown
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(true))
+
+        // Execute pending coroutines actions
+        mainCoroutineRule.resumeDispatcher()
+
+        // Then progress indicator is hidden
+        assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(false))
     }
 }
