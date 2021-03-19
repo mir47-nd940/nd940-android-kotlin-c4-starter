@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -72,16 +71,16 @@ class AuthenticationActivity : AppCompatActivity() {
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
 
-        val customLayout = AuthMethodPickerLayout.Builder(R.layout.fragment_auth_ui)
-            .setGoogleButtonId(R.id.buttonGoogle)
-            .setEmailButtonId(R.id.buttonEmail)
-            .build()
-
         // Create and launch sign-in intent. We listen to the response of this activity with the
         // SIGN_IN_RESULT_CODE code.
+        // Instead of using theme, Auth UI could be further customised using:
+        //   .setAuthMethodPickerLayout(AuthMethodPickerLayout.Builder()
+        //     .setGoogleButtonId(R.id.buttonGoogle)
+        //     .setEmailButtonId(R.id.buttonEmail)
+        //     .build())
         startActivityForResult(
             AuthUI.getInstance().createSignInIntentBuilder()
-                .setAuthMethodPickerLayout(customLayout)
+                .setTheme(R.style.LoginTheme)
                 .setAvailableProviders(providers)
                 .build(), SIGN_IN_RESULT_CODE
         )
